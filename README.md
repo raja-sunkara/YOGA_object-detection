@@ -3,6 +3,8 @@
 [![Paper](https://img.shields.io/badge/Pattern%20Recognition-2023-blue)](https://doi.org/10.1016/j.patcog.2023.109451)
 [![arXiv](https://img.shields.io/badge/arXiv-2307.05945-b31b1b)](https://arxiv.org/abs/2307.05945)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-green)](LICENSE)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TrustAIoT/YOGA_object-detection/blob/main/YOGA_quickstart.ipynb)
+[![CI](https://github.com/TrustAIoT/YOGA_object-detection/actions/workflows/ci.yml/badge.svg)](https://github.com/TrustAIoT/YOGA_object-detection/actions/workflows/ci.yml)
 
 Official code, configs and pretrained COCO weights for
 
@@ -41,6 +43,8 @@ pip install -r requirements.txt
 ```
 
 ## Quick start
+
+The fastest way to try YOGA is the [Colab notebook](https://colab.research.google.com/github/TrustAIoT/YOGA_object-detection/blob/main/YOGA_quickstart.ipynb): no install, and it covers detection, PyTorch Hub, validation and fine-tuning. To run locally:
 
 Detect objects in images, videos, folders or a webcam:
 
@@ -102,6 +106,12 @@ See [`models/YOGA-s.yaml`](models/YOGA-s.yaml) for the full network. If you use 
 ```bash
 python export.py --weights YOGA-n.pt --include onnx    # also torchscript, coreml, saved_model, pb, tflite, tfjs
 ```
+
+## Troubleshooting
+
+**`AttributeError: 'Upsample' object has no attribute 'recompute_scale_factor'`.** This happens when a checkpoint saved with an older PyTorch is loaded with a newer one. `attempt_load` in `models/experimental.py` now patches this automatically. If you load a checkpoint some other way and still see the error, follow the fix in [this YOLOv5 issue comment](https://github.com/ultralytics/yolov5/issues/6948#issuecomment-1075528897).
+
+**`_pickle.UnpicklingError: Weights only load failed`.** PyTorch 2.6+ refuses to unpickle full models by default. Load checkpoints through `attempt_load` (as `detect.py` and `val.py` do), or pass `weights_only=False` to `torch.load` for checkpoints you trust.
 
 ## Citation
 
